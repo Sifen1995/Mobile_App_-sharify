@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Sharify">Sharifytest2</string>
+    <string name="Hello">Create your account to start sharing!</string>
+    <string name="Creat">Create Account</string>
+    <string name="name">Enter Your full name</string>
+    <string name="Email">Your email address</string>
+    <string name="Password">Create password</string>
+    <string name="Login_password">Enter your password</string>
+    <string name="Terms">I agree with Terms and Conditions</string>
+
+</resources>
