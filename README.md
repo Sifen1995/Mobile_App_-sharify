@@ -1,15 +1,15 @@
-# Mobile_App_-sharify
+# Mobile_App_Sharify
 
 Project Title:  Sharify App
 
 **Description** <br>
-The application allows users to borrow what they need from others and share resources they possess but don't use frequently.  Regular users can lend and borrow objects, and administrators can oversee the system.    
+The application allows users to borrow what they need from others and monitor items, while administrators can create and lend items, as well as oversee the system.
 
 <u>Feature One</u>: *Borrow*  
-- Users can easily browse available items within their community, make borrowing requests, and manage their borrowings.  
+- Users can easily browse available items , add them, monitor borrowed items, and manage their borrowings.
 
 <u>Feature Two</u>: *Lend*  
-- Users can list items they wish to lend, providing detailed information about their availability and terms.
+- Administrators can create and list items for lending, providing detailed information about their availability and terms.
 
 
 
