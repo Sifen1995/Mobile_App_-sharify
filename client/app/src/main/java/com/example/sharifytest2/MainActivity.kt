@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 
-import com.example.sharifytest2.app.sharifyNavHost
+import com.example.sharifytest2.navigation.sharifyNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

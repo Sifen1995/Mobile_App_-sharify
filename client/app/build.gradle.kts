@@ -45,6 +45,9 @@ android {
     buildFeatures {
         compose = true
     }
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 
@@ -59,6 +62,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.benchmark.macro)
+    implementation(libs.androidx.room.common.jvm)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,6 +76,8 @@ dependencies {
     implementation (libs.androidx.material)
     implementation (libs.androidx.navigation.compose)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
+
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
 
@@ -83,6 +89,14 @@ dependencies {
     implementation(libs.retrofit) // Core Retrofit library
     implementation(libs.converter.gson) // JSON converter
     implementation(libs.logging.interceptor)
+    implementation(libs.coil.compose) // Add this line
+
+    implementation(libs.coil.compose.v222)
+    implementation (libs.coil.compose.v240)
+
+    implementation (libs.activity.compose.v172 )// or latest
+
+
 
 
 
