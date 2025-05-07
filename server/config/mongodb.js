@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(`${process.env.MONGODB_URL}/Sharify`, {
+    const conn = await mongoose.connect(`${process.env.MONGODB_URL}`, {
       serverSelectionTimeoutMS: 5000 // 5 second connection timeout
     });
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
@@ -12,8 +12,7 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-
-// Separate admin creation function
+ 
  
 import User from '../models/userModel.js';
 import bcrypt from 'bcryptjs';
