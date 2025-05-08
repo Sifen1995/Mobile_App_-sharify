@@ -6,14 +6,11 @@ import com.example.sharifytest2.data.local.UserPreferences
 import com.example.sharifytest2.data.model.auth.LoginRequestDTO
 import com.example.sharifytest2.data.model.auth.RegisterRequestDTO
 
-import com.example.sharifytest2.domain.auth.models.AuthResponse
-import com.example.sharifytest2.domain.auth.models.LoginRequest
-import com.example.sharifytest2.domain.auth.models.RegisterRequest
+import com.example.sharifytest2.domain.models.auth.AuthResponse
+import com.example.sharifytest2.domain.models.auth.LoginRequest
+import com.example.sharifytest2.domain.models.auth.RegisterRequest
 
 import com.example.sharifytest2.domain.auth.repository.AuthRepository
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
