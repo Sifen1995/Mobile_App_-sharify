@@ -79,7 +79,7 @@ export const login = async(req,res) =>{
 
 
         });
-        return res.json({ success: true, message: 'User sign in successfully',role: user.role, token:user,token});
+        return res.json({ success: true, message: 'User sign in successfully',role: user.role, token:user,token,id :user.id});
 
 
     }catch(error){
