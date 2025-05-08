@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sharifytest2.data.local.UserPreferences
 
-import com.example.sharifytest2.domain.auth.useCase.LoginUseCase
-import com.example.sharifytest2.domain.auth.useCase.RegisterUseCase
+import com.example.sharifytest2.domain.useCase.LoginUseCase
+import com.example.sharifytest2.domain.useCase.RegisterUseCase
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,4 +1,4 @@
-package com.example.sharifytest2.domain.auth.repository
+package com.example.sharifytest2.domain.repository
 
 
 import com.example.sharifytest2.domain.models.auth.AuthResponse
