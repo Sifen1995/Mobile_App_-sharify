@@ -1,7 +1,7 @@
 package com.example.sharifytest2.presentation.viewmodel
 
-import com.example.sharifytest2.domain.auth.models.LoginRequest
-import com.example.sharifytest2.domain.auth.models.RegisterRequest
+import com.example.sharifytest2.domain.models.auth.LoginRequest
+import com.example.sharifytest2.domain.models.auth.RegisterRequest
 import com.example.sharifytest2.presentation.uiStates.AuthUiState
 
 
@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
 import javax.inject.Inject
 
 
