@@ -15,12 +15,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.sharifytest2.presentation.Screens.admin.AdminDashboard
+
 
 
 import com.example.sharifytest2.presentation.Screens.auth.SignInScreen
 
 import com.example.sharifytest2.presentation.Screens.auth.SignUpScreen
+import com.example.sharifytest2.presentation.Screens.user.AdminDashboard
 import com.example.sharifytest2.presentation.Screens.user.MainScreen
 import com.example.sharifytest2.presentation.Screens.user.UserHomePage
 

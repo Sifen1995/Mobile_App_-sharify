@@ -3,9 +3,10 @@ package com.example.sharifytest2.data.model.auth
 
 
 data class AuthResponseDTO(
-    val token: String,
+    val userId:String?,
     val success: Boolean,
     val message: String,
-    val role: String?,
+    val role: String? = "person",
+    val token : String? = null
 
-    )
+)
