@@ -19,9 +19,9 @@ export const getItemDetails = async (req, res) => {
 export const borrowItem = async (req, res) => {
     try {
         const { id } = req.params;
-        const userId = req.user.id;  
+        const userId = req.user.id; // Get user ID from authentication
 
-        
+        // Find item and update availability & borrowedBy
         const item = await ItemModel.findByIdAndUpdate(
             id,
             {borrowedBy: userId },
@@ -37,7 +37,6 @@ export const borrowItem = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
-
 
 export const getBorrowedItems = async (req, res) => {
     try {
@@ -68,7 +67,8 @@ export const updateBorrowedItemNote = async (req, res) => {
         const { id } = req.params;
         const { note } = req.body;
         const userId = req.user.id;
- 
+
+        // Find the item and ensure the user is the borrower
         const item = await ItemModel.findById(id);
         if (!item) {
             return res.status(404).json({ success: false, message: "Item not found" });
@@ -77,10 +77,11 @@ export const updateBorrowedItemNote = async (req, res) => {
             return res.status(403).json({ success: false, message: "You can only update notes for your own borrowed items" });
         }
 
-         
+        // Update the note
         item.note = note;
         await item.save();
- 
+
+        // ✅ Modify response to return only success and note
         res.status(200).json({success: true,note: item.note });
 
     } catch (error) {
@@ -91,8 +92,9 @@ export const updateBorrowedItemNote = async (req, res) => {
 export const removeBorrowedItem = async (req, res) => {
     try {
         const { id } = req.params;
-        const userId = req.user.id;  
- 
+        const userId = req.user.id; // Get logged-in user ID
+
+        // Find the item and ensure the user is the borrower
         const item = await ItemModel.findById(id);
         if (!item) {
             return res.status(404).json({ success: false, message: "Item not found" });
@@ -101,7 +103,7 @@ export const removeBorrowedItem = async (req, res) => {
             return res.status(403).json({ success: false, message: "You can only remove items you borrowed" });
         }
 
-    
+        // ✅ Remove user from 'borrowedBy' field instead of deleting the item
         item.borrowedBy = null;
         item.isAvailable = true;
         await item.save();
