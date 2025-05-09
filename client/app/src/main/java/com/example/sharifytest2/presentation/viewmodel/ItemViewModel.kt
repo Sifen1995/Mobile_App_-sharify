@@ -139,3 +139,78 @@ class ItemViewModel @Inject constructor(
             }
         }
     }
+
+    fun removeFromBorrowed(itemId: String) {
+        viewModelScope.launch {
+            try {
+                val success = removeBorrowedItemUseCase.execute(itemId)
+                if (success) {
+                    fetchBorrowedItems()
+                    Log.d("ItemViewModel", "✅ Item removed successfully!")
+                } else {
+                    Log.e("ItemViewModel", "❌ Deletion failed!")
+                }
+            } catch (e: Exception) {
+                Log.e("ItemViewModel", "Error removing item: ${e.message}")
+            }
+        }
+    }
+
+
+
+    private val _itemState = MutableStateFlow<AddItem?>(null)
+    val itemState: StateFlow<AddItem?> = _itemState
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
+
+    fun addItem(
+
+        image: MultipartBody.Part,
+        name: String,
+        smalldescription: String,
+        description: String,
+        termsAndConditions: String,
+        telephon: String,
+        address: String,
+        onSuccess: () -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val token = userPreferences.getAuthToken() ?: throw Exception("❌ No authentication token found!")
+
+                Log.d("ItemViewModel", "📡 Sending request as Admin with token: Bearer $token")
+
+                // ✅ Convert Strings inside ViewModel
+                val nameBody = name.toRequestBody("text/plain".toMediaTypeOrNull())
+                val smalldescriptionBody = smalldescription.toRequestBody("text/plain".toMediaTypeOrNull())
+                val descriptionBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
+                val termsBody = termsAndConditions.toRequestBody("text/plain".toMediaTypeOrNull())
+                val phoneBody = telephon.toRequestBody("text/plain".toMediaTypeOrNull())
+                val addressBody = address.toRequestBody("text/plain".toMediaTypeOrNull())
+
+                _itemState.value = addItemUseCase.execute(
+                    image, nameBody, smalldescriptionBody, descriptionBody,
+                    termsBody, phoneBody, addressBody
+                )
+
+                loadItems() // ✅ Refresh item list dynamically
+                onSuccess()
+
+                Log.d("ItemViewModel", "✅ Item added successfully: ${_itemState.value?.name}")
+
+            } catch (e: Exception) {
+                _errorMessage.value =( "❌ Error adding item: ${e.message}")
+                Log.e("ItemViewModel", "❌ Exception while adding item: ${e.message}", e)
+            }
+        }
+    }
+
+    fun prepareImagePart(uri: Uri, context: Context): MultipartBody.Part {
+        val contentResolver = context.contentResolver
+        val inputStream = contentResolver.openInputStream(uri)
+        val bytes = inputStream?.readBytes()
+        val requestBody = bytes?.toRequestBody("image/*".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData("image", "uploaded_image.jpg", requestBody!!)
+    }
+}
