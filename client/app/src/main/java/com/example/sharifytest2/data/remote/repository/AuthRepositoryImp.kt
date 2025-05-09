@@ -10,7 +10,8 @@ import com.example.sharifytest2.domain.models.auth.AuthResponse
 import com.example.sharifytest2.domain.models.auth.LoginRequest
 import com.example.sharifytest2.domain.models.auth.RegisterRequest
 
-import com.example.sharifytest2.domain.auth.repository.AuthRepository
+
+import com.example.sharifytest2.domain.repository.AuthRepository
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
