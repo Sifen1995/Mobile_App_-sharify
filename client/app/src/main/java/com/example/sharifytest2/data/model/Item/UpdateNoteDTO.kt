@@ -1,4 +1,4 @@
-package com.example.sharifytest2.data.model.item
+package com.example.sharifytest2.data.model.Item
 
 import com.example.sharifytest2.domain.models.userItemModel.UpdateNote
 
