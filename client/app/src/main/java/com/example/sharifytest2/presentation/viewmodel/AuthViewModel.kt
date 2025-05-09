@@ -1,5 +1,6 @@
 package com.example.sharifytest2.presentation.viewmodel
 
+import android.util.Log
 import com.example.sharifytest2.domain.models.auth.LoginRequest
 import com.example.sharifytest2.domain.models.auth.RegisterRequest
 import com.example.sharifytest2.presentation.uiStates.AuthUiState
@@ -8,15 +9,18 @@ import com.example.sharifytest2.presentation.uiStates.AuthUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sharifytest2.data.local.UserPreferences
+import com.example.sharifytest2.domain.models.auth.User
 
-import com.example.sharifytest2.domain.auth.useCase.LoginUseCase
-import com.example.sharifytest2.domain.auth.useCase.RegisterUseCase
+import com.example.sharifytest2.domain.useCase.auth.LoginUseCase
+import com.example.sharifytest2.domain.useCase.auth.RegisterUseCase
+import com.example.sharifytest2.domain.useCase.userItem.UpdateProfileUseCase
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 
@@ -24,6 +28,7 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val registerUseCase: RegisterUseCase,
+    private val updateProfileUseCase: UpdateProfileUseCase,
 
     private val userPreferences: UserPreferences // ✅ Inject UserPreferences
 ) : ViewModel()
@@ -100,6 +105,36 @@ class AuthViewModel @Inject constructor(
     fun resetSuccess() {
         _authState.update { it.copy(success = false) }
     }
+
+
+    private val _userState = MutableStateFlow<User?>(null)
+    val userState: StateFlow<User?> = _userState
+
+    private val _message = MutableStateFlow("")
+    val message: StateFlow<String> = _message
+    fun updateProfile(userId: String, name: String, image: MultipartBody.Part?) {
+        viewModelScope.launch {
+            try {
+                Log.d("Profile Update", "Sending request - userId: $userId, name: $name, image: ${image?.headers}")
+
+                val result = updateProfileUseCase(userId, name, image)
+
+                Log.d("Profile Update", "Response: success=${result.success}, message=${result.message}")
+
+                _message.value = result.message
+                if (result.success && result.updatedUser != null) {
+                    Log.d("Profile Update", "Updated user: ${result.updatedUser}")
+                    _userState.value = result.updatedUser
+                } else {
+                    Log.e("Profile Update", "Profile update failed")
+                }
+            } catch (e: Exception) {
+                Log.e("Profile Update", "Error: ${e.localizedMessage}")
+                _message.value = "Error: ${e.localizedMessage}"
+            }
+        }
+    }
+
 
 }
 
