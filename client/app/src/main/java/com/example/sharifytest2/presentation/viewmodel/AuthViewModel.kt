@@ -13,18 +13,19 @@ import com.example.sharifytest2.domain.models.auth.DeleteResponse
 import com.example.sharifytest2.domain.models.auth.LogoutResponse
 import com.example.sharifytest2.domain.models.auth.User
 import com.example.sharifytest2.domain.useCase.auth.DeleteAccountUseCase
-
 import com.example.sharifytest2.domain.useCase.auth.LoginUseCase
 import com.example.sharifytest2.domain.useCase.auth.LogoutUseCase
 import com.example.sharifytest2.domain.useCase.auth.RegisterUseCase
 import com.example.sharifytest2.domain.useCase.userItem.UpdateProfileUseCase
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 
@@ -33,22 +34,26 @@ class AuthViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val registerUseCase: RegisterUseCase,
     private val updateProfileUseCase: UpdateProfileUseCase,
-
-    private val userPreferences: UserPreferences, // ✅ Inject UserPreferences
     private val logoutUseCase : LogoutUseCase,
 
-    private val deleteAccountUseCase: DeleteAccountUseCase
-) : ViewModel() {
+    private val deleteAccountUseCase: DeleteAccountUseCase,
+    private val userPreferences: UserPreferences // ✅ Inject UserPreferences
+) : ViewModel()
+{
 
     private val _authState = MutableStateFlow(AuthUiState())
 
     val authState: StateFlow<AuthUiState> = _authState
 
 
+
+
+
     init {
         viewModelScope.launch {
-            val savedRole = userPreferences.getUserRole()
-            _authState.update { it.copy(userRole = savedRole) }
+            val savedUserId = userPreferences.getUserId()
+            Log.d("AuthViewModel", "✅ Retrieved user ID: $savedUserId from storage")
+            _authState.update { it.copy(userId = savedUserId, userRole = userPreferences.getUserRole()) }
         }
     }
 
@@ -61,11 +66,11 @@ class AuthViewModel @Inject constructor(
 
                 if (result.success) {
                     userPreferences.saveAuthToken(result.token ?: "")
-                    userPreferences.saveUserRole(result.role ?: "user") // ✅ Store role safely
+                    userPreferences.saveUserRole(result.role ?: "user")
+                    userPreferences.saveUserId(result.id ?: "") // ✅ Store user ID
 
                     _authState.update {
-                        println("✅ Successfully logged in with role: ${result.role}") // ✅ Debug output
-                        it.copy(success = true, userRole = result.role)
+                        it.copy(success = true, userId = result.id, userRole = result.role)
                     }
                 } else {
                     _authState.update { it.copy(error = result.message) }
@@ -74,6 +79,13 @@ class AuthViewModel @Inject constructor(
             } catch (e: Exception) {
                 _authState.update { it.copy(error = e.localizedMessage) }
             }
+        }
+    }
+    fun loadUserId() {
+        viewModelScope.launch {
+            val savedUserId = userPreferences.getUserId()
+            println("🔍 Retrieved user ID from storage: $savedUserId") // ✅ Debugging
+            _authState.update { it.copy(userId = savedUserId) } // ✅ Make sure UI updates
         }
     }
 
@@ -101,7 +113,6 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
-
     fun clearError() {
         _authState.update { it.copy(error = null) }
     }
@@ -109,41 +120,32 @@ class AuthViewModel @Inject constructor(
     fun resetSuccess() {
         _authState.update { it.copy(success = false) }
     }
-
-
     private val _userState = MutableStateFlow<User?>(null)
     val userState: StateFlow<User?> = _userState
 
     private val _message = MutableStateFlow("")
     val message: StateFlow<String> = _message
-    fun updateProfile(userId: String, name: String, image: MultipartBody.Part?) {
+    fun updateProfile(userId: String, name: RequestBody, image: MultipartBody.Part?) {
         viewModelScope.launch {
             try {
-                Log.d(
-                    "Profile Update",
-                    "Sending request - userId: $userId, name: $name, image: ${image?.headers}"
-                )
-
                 val result = updateProfileUseCase(userId, name, image)
 
-                Log.d(
-                    "Profile Update",
-                    "Response: success=${result.success}, message=${result.message}"
-                )
-
                 _message.value = result.message
-                if (result.success && result.updatedUser != null) {
-                    Log.d("Profile Update", "Updated user: ${result.updatedUser}")
-                    _userState.value = result.updatedUser
-                } else {
-                    Log.e("Profile Update", "Profile update failed")
+                if (result.success) {
+                    result.updatedUser?.let { updatedUser ->
+                        _userState.value = updatedUser
+                    }
                 }
             } catch (e: Exception) {
-                Log.e("Profile Update", "Error: ${e.localizedMessage}")
-                _message.value = "Error: ${e.localizedMessage}"
+                _message.value = "Update failed: ${e.localizedMessage}"
+                Log.e("ProfileUpdate", "Error: ${e.stackTraceToString()}")
             }
         }
     }
+
+
+
+
 
     private val _logoutState = MutableStateFlow<LogoutResponse?>(null)
     val logoutState: StateFlow<LogoutResponse?> get() = _logoutState
@@ -172,9 +174,8 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
-
-
 }
+
 
 
 
