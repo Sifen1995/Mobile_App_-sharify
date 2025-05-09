@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.IosShare
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -32,6 +31,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.border
+import androidx.compose.material.icons.filled.Unarchive
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.rememberAsyncImagePainter
@@ -222,7 +222,7 @@ fun BottomNavigationBar(navController: NavController, userRole: String?) {
                 selected = currentRoute == Screen.BorrowingPage.route,
                 onClick = { navController.navigate(Screen.BorrowingPage.route) },
                 label = { Text("Borrowing", fontSize = 12.sp) },
-                icon = { Icon(Icons.Filled.Visibility, contentDescription = "Borrowing") },
+                icon = { Icon(Icons.Filled.Unarchive, contentDescription = "Borrowing") },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFF005D73),
                     selectedTextColor = Color(0xFF005D73),
