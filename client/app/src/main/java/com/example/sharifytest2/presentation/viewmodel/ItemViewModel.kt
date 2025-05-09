@@ -61,3 +61,59 @@ class ItemViewModel @Inject constructor(
             }
         }
     }
+
+
+    fun fetchItemDetails(itemId: String) {
+        viewModelScope.launch {
+            try {
+                Log.d("ItemViewModel", "Fetching details for itemId: $itemId")
+                val item = getItemDetailsUseCase.execute(itemId)
+                _itemDetail.emit(item)
+            } catch (e: Exception) {
+                Log.e("ItemViewModel", "Error fetching item details: ${e.message}")
+            }
+        }
+    }
+
+    // ✅ Moved outside `fetchItemDetails` and made public
+    fun borrowItem(itemId: String) {
+        viewModelScope.launch {
+            try {
+                val success = borrowItemUseCase.execute(itemId)
+                if (success) {
+                    fetchBorrowedItems()
+                    Log.d("ItemViewModel", "✅ Item borrowed successfully!")
+                } else {
+                    Log.e("ItemViewModel", "❌ Borrowing failed!")
+                }
+            } catch (e: Exception) {
+                Log.e("ItemViewModel", "Error borrowing item: ${e.message}")
+            }
+        }
+    }
+
+
+    private val _borrowedItems = MutableStateFlow<List<BorrowedItem>>(emptyList())
+    val borrowedItems: StateFlow<List<BorrowedItem>> = _borrowedItems
+
+    fun fetchBorrowedItems() {
+        viewModelScope.launch {
+            try {
+                Log.d("ItemViewModel", "🔍 Fetching borrowed items...") // ✅ Debugging log
+                val fetchedItems = getBorrowedItemsUseCase.execute() // ✅ Fetch using use case
+
+                fetchedItems.forEach { item ->
+                    Log.d("ItemViewModel", "🔍 Borrowed item ID: ${item.id}, Note: ${item.note}")
+                }
+
+
+                Log.d(
+                    "ItemViewModel",
+                    "✅ Retrieved ${fetchedItems.size} borrowed items"
+                ) // ✅ Log the response size
+                _borrowedItems.value = fetchedItems
+            } catch (e: Exception) {
+                Log.e("ItemViewModel", "❌ Error fetching borrowed items: ${e.message}")
+            }
+        }
+    }
