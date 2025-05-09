@@ -47,6 +47,15 @@ class UserPreferences @Inject constructor(context: Context) {
         println("✅ User role stored in SharedPreferences: $role")
     }
 
+    fun saveUserId(userId: String) {
+        sharedPreferences.edit().putString("user_id", userId).apply()
+    }
+
+    fun getUserId(): String? {
+        return sharedPreferences.getString("user_id", null) // ✅ Retrieve user ID
+    }
+
+
     // ✅ Optional: Clear preferences if needed
     fun clearUserData() {
         cachedToken = null
