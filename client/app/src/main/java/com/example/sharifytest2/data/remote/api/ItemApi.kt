@@ -9,9 +9,9 @@ import com.example.sharifytest2.data.model.item.RemoveItemResponseDTO
 import com.example.sharifytest2.data.model.item.UpdateNoteDTO
 import com.example.sharifytest2.data.model.item.UpdateNoteResponseDTO
 import com.example.sharifytest2.data.model.lendItem.AddItemResponseDTO
-import com.example.sharifytest2.data.model.lendItem.UpdateItemResponse
+
 import com.example.sharifytest2.data.model.lendItem.UpdateItemResponseDTO
-import com.example.sharifytest2.domain.Items.models.ItemsResponse
+import com.example.sharifytest2.domain.models.userItemModel.ItemsResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
