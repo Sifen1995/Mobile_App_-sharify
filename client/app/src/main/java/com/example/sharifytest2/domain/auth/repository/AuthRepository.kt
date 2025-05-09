@@ -1,10 +1,9 @@
 package com.example.sharifytest2.domain.auth.repository
 
 
-import com.example.sharifytest2.domain.auth.models.AuthResponse
-import com.example.sharifytest2.domain.auth.models.LoginRequest
-import com.example.sharifytest2.domain.auth.models.RegisterRequest
-import okhttp3.MultipartBody
+import com.example.sharifytest2.domain.models.auth.AuthResponse
+import com.example.sharifytest2.domain.models.auth.LoginRequest
+import com.example.sharifytest2.domain.models.auth.RegisterRequest
 
 
 interface AuthRepository {
