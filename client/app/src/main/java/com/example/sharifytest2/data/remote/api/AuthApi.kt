@@ -1,9 +1,11 @@
 package com.example.sharifytest2.data.auth.remote
 
+
 import com.example.sharifytest2.data.model.auth.AuthResponseDTO
 import com.example.sharifytest2.data.model.auth.DeleteResponseDTO
 import com.example.sharifytest2.data.model.auth.LoginRequestDTO
 import com.example.sharifytest2.data.model.auth.LogoutResponseDTO
+
 import com.example.sharifytest2.data.model.auth.RegisterRequestDTO
 import com.example.sharifytest2.data.model.auth.UpdateProfileResponseDTO
 import okhttp3.MultipartBody

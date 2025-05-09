@@ -71,11 +71,18 @@ class AuthRepositoryImpl @Inject constructor(
     ): UpdateProfileResponse {
 //        val namePart = name.toRequestBody("text/plain".toMediaTypeOrNull())
 
+        // Log Request Details
+        Log.d("Profile Update", "Sending request to update profile")
+        Log.d("Profile Update", "User ID: $userId")
+        Log.d("Profile Update", "Name: $name")
+        Log.d("Profile Update", "Image: ${image?.headers}")
+
         val response = api.updateProfile(userId, name, image)
 
         if (response.isSuccessful) {
             val body = response.body()
-
+            Log.d("Profile Update", "Response Success: ${body?.success}")
+            Log.d("Profile Update", "Message: ${body?.message}")
             return UpdateProfileResponse(
                 success = body?.success ?: false,
                 message = body?.message ?: "No message received",
@@ -83,7 +90,7 @@ class AuthRepositoryImpl @Inject constructor(
             )
         } else {
             val error = response.errorBody()?.string()
-
+            Log.e("Profile Update", "Response Failed: ${response.code()} - $error")
             return UpdateProfileResponse(false, error ?: "Unknown error", null)
         }
     }

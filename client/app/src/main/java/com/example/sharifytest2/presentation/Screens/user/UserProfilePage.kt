@@ -1,8 +1,8 @@
-
 package com.example.sharifytest2.presentation.Screens.user
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,6 +28,7 @@ import com.example.sharifytest2.presentation.viewmodel.AuthViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 @Composable
@@ -43,7 +44,12 @@ fun ProfileScreen(
     var name by remember { mutableStateOf(user?.name.orEmpty()) }
     var email by remember { mutableStateOf(user?.email.orEmpty()) }
 
-    // Show toast for messages
+    // ✅ Load user ID at startup to ensure it's available
+    LaunchedEffect(Unit) {
+        Log.d("ProfileScreen", "Loading user ID...")
+        viewModel.loadUserId()
+    }
+
     LaunchedEffect(message) {
         message?.let { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
     }
@@ -116,15 +122,21 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Save Changes Button (now visible at the bottom)
+            // ✅ Updated Save Changes Button with improved user ID handling
             Button(
                 onClick = {
+                    val userId = viewModel.authState.value.userId
+                    if (userId.isNullOrEmpty()) {
+                        Toast.makeText(context, "User not authenticated", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+
                     val imagePart = selectedImageUri?.let { prepareImagePart(it, context) }
-                    viewModel.updateProfile(user?.id.orEmpty(), name, imagePart)
+                    val nameRequestBody = name.toRequestBody("text/plain".toMediaTypeOrNull())
+
+                    viewModel.updateProfile(userId, nameRequestBody, imagePart)
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp), // Ensure it's not cut off
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
                 shape = RoundedCornerShape(15.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF005D73))
             ) {

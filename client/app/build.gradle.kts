@@ -97,6 +97,16 @@ dependencies {
     implementation (libs.activity.compose.v172 )// or latest
 
 
+    implementation(libs.okhttp3.okhttp)
+
+    implementation(libs.okhttp3.okhttp)
+    implementation(libs.okhttp.urlconnection)
+
+
+
+
+
+
 
 
 

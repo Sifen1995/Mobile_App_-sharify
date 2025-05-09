@@ -1,15 +1,16 @@
 package com.example.sharifytest2.data.remote.api
 
+import com.example.sharifytest2.data.model.Item.UpdateNoteDTO
 import com.example.sharifytest2.data.model.item.BorrowResponseDTO
 import com.example.sharifytest2.data.model.item.BorrowedItemsResponseDTO
-import com.example.sharifytest2.data.model.item.ItemDTO
-import com.example.sharifytest2.data.model.item.ItemDetailDTO
 import com.example.sharifytest2.data.model.item.ItemResponseDTO
 import com.example.sharifytest2.data.model.item.RemoveItemResponseDTO
-import com.example.sharifytest2.data.model.item.UpdateNoteDTO
+
 import com.example.sharifytest2.data.model.item.UpdateNoteResponseDTO
 import com.example.sharifytest2.data.model.lendItem.AddItemResponseDTO
+import com.example.sharifytest2.data.model.lendItem.DeleteItemResponseDTO
 
+import com.example.sharifytest2.data.model.lendItem.StatisticsResponseDto
 import com.example.sharifytest2.data.model.lendItem.UpdateItemResponseDTO
 import com.example.sharifytest2.domain.models.userItemModel.ItemsResponse
 import okhttp3.MultipartBody
@@ -33,8 +34,8 @@ interface ItemApi {
 
     @GET("api/borrow/item/{id}")
     suspend fun getItemById(
-        @Path("id") id: String // ✅ Use @Path to correctly pass ID in the URL
-    ): Response<ItemResponseDTO> // ✅ Return ItemDetailDTO instead of ItemDTO for full details
+        @Path("id") id: String
+    ): Response<ItemResponseDTO>
     @PUT("api/borrow/borrow-item/{id}")
 
     suspend fun borrowItem(@Path("id") id: String, @Header("Authorization") token: String): Response<BorrowResponseDTO>
@@ -72,22 +73,35 @@ interface ItemApi {
 
 
     @Multipart
-    @PUT("api/admin/items/{itemId}")
+    @PUT("api/admin/update-item/{itemId}")
     suspend fun updateItem(
         @Path("itemId") itemId: String,
         @Part("name") name: RequestBody?,
-        @Part("smallDescription") smallDescription: RequestBody?,
+        @Part("smalldescription") smalldescription: RequestBody?,
         @Part("description") description: RequestBody?,
-        @Part("terms") terms: RequestBody?,
-        @Part("phone") phone: RequestBody?,
+        @Part("termsAndConditions") terms: RequestBody?,
+        @Part("telephon") phone: RequestBody?,
         @Part("address") address: RequestBody?,
+        @Part("isAvailable") isAvailable: RequestBody?, // ✅ Added availability field
         @Part image: MultipartBody.Part?
     ): Response<UpdateItemResponseDTO>
 
 
+    @GET("/api/admin/statistics")
+    suspend fun getStatistics(): Response<StatisticsResponseDto>
 
 
+    @DELETE("api/admin/delete-item/{id}")
+    suspend fun deleteItem(@Path("id") itemId: String): Response<DeleteItemResponseDTO>
 
 
 
 }
+
+
+
+
+
+
+
+
