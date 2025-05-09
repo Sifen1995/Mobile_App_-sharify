@@ -4,6 +4,9 @@ import com.example.sharifytest2.data.auth.repository.AuthRepositoryImpl
 import com.example.sharifytest2.domain.auth.repository.AuthRepository
 import com.example.sharifytest2.domain.auth.useCase.LoginUseCase
 import com.example.sharifytest2.domain.auth.useCase.RegisterUseCase
+import com.example.sharifytest2.domain.repository.AuthRepository
+import com.example.sharifytest2.domain.useCase.auth.LoginUseCase
+import com.example.sharifytest2.domain.useCase.auth.RegisterUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
