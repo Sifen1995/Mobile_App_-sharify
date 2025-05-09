@@ -9,9 +9,13 @@ import com.example.sharifytest2.presentation.uiStates.AuthUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sharifytest2.data.local.UserPreferences
+import com.example.sharifytest2.domain.models.auth.DeleteResponse
+import com.example.sharifytest2.domain.models.auth.LogoutResponse
 import com.example.sharifytest2.domain.models.auth.User
+import com.example.sharifytest2.domain.useCase.auth.DeleteAccountUseCase
 
 import com.example.sharifytest2.domain.useCase.auth.LoginUseCase
+import com.example.sharifytest2.domain.useCase.auth.LogoutUseCase
 import com.example.sharifytest2.domain.useCase.auth.RegisterUseCase
 import com.example.sharifytest2.domain.useCase.userItem.UpdateProfileUseCase
 
@@ -30,16 +34,15 @@ class AuthViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
     private val updateProfileUseCase: UpdateProfileUseCase,
 
-    private val userPreferences: UserPreferences // ✅ Inject UserPreferences
-) : ViewModel()
-{
+    private val userPreferences: UserPreferences, // ✅ Inject UserPreferences
+    private val logoutUseCase : LogoutUseCase,
+
+    private val deleteAccountUseCase: DeleteAccountUseCase
+) : ViewModel() {
 
     private val _authState = MutableStateFlow(AuthUiState())
 
     val authState: StateFlow<AuthUiState> = _authState
-
-
-
 
 
     init {
@@ -98,6 +101,7 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
+
     fun clearError() {
         _authState.update { it.copy(error = null) }
     }
@@ -115,11 +119,17 @@ class AuthViewModel @Inject constructor(
     fun updateProfile(userId: String, name: String, image: MultipartBody.Part?) {
         viewModelScope.launch {
             try {
-                Log.d("Profile Update", "Sending request - userId: $userId, name: $name, image: ${image?.headers}")
+                Log.d(
+                    "Profile Update",
+                    "Sending request - userId: $userId, name: $name, image: ${image?.headers}"
+                )
 
                 val result = updateProfileUseCase(userId, name, image)
 
-                Log.d("Profile Update", "Response: success=${result.success}, message=${result.message}")
+                Log.d(
+                    "Profile Update",
+                    "Response: success=${result.success}, message=${result.message}"
+                )
 
                 _message.value = result.message
                 if (result.success && result.updatedUser != null) {
@@ -131,6 +141,34 @@ class AuthViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e("Profile Update", "Error: ${e.localizedMessage}")
                 _message.value = "Error: ${e.localizedMessage}"
+            }
+        }
+    }
+
+    private val _logoutState = MutableStateFlow<LogoutResponse?>(null)
+    val logoutState: StateFlow<LogoutResponse?> get() = _logoutState
+
+    private val _deleteState = MutableStateFlow<DeleteResponse?>(null)
+    val deleteState: StateFlow<DeleteResponse?> get() = _deleteState
+
+    fun logout() {
+        viewModelScope.launch {
+            try {
+                val response = logoutUseCase()
+                _logoutState.value = response
+            } catch (e: Exception) {
+                _logoutState.value = LogoutResponse(false, e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    fun deleteAccount(userId: String) {
+        viewModelScope.launch {
+            try {
+                val response = deleteAccountUseCase(userId)
+                _deleteState.value = response
+            } catch (e: Exception) {
+                _deleteState.value = DeleteResponse(false, e.message ?: "Unknown error")
             }
         }
     }
