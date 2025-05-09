@@ -117,3 +117,25 @@ class ItemViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateBorrowNote(itemId: String, note: String) {
+        viewModelScope.launch {
+            try {
+                Log.d("ItemViewModel", "Attempting to update note for $itemId")
+                val success = updateNoteUseCase.execute(itemId, note)
+
+                if (success) {
+                    _borrowedItems.update { currentList ->
+                        currentList.map {
+                            if (it.id == itemId) it.copy(note = note) else it
+                        }
+                    }
+                    Log.d("ItemViewModel", "Update successful")
+                } else {
+                    Log.e("ItemViewModel", "Update failed - check server logs")
+                }
+            } catch (e: Exception) {
+                Log.e("ItemViewModel", "Update error", e)
+            }
+        }
+    }
