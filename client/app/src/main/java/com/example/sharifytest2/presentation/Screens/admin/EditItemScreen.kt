@@ -15,6 +15,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ShortText
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.PhotoCamera
@@ -95,6 +96,7 @@ fun EditItemScreen(
                 color = Color.Gray
             )
 
+
             Spacer(modifier = Modifier.height(24.dp))
 
             // Upload image row
@@ -132,7 +134,7 @@ fun EditItemScreen(
 
             Text("Item Info", style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
-            ItemInputField("Name*", Icons.Default.Place, name) { name = it }
+            ItemInputField("Name*", Icons.Default.EditOff, name) { name = it }
             ItemInputField("Short Description*", Icons.AutoMirrored.Filled.ShortText, smallDescription) { smallDescription = it }
             ItemInputField("Description*", Icons.Default.Description, description) { description = it }
             ItemInputField("Terms & Conditions", Icons.Default.Info, termsAndConditions) { termsAndConditions = it }
@@ -172,6 +174,7 @@ fun EditItemScreen(
                 updateStatus == "Updating..." -> CircularProgressIndicator()
                 updateStatus != null -> Text(updateStatus!!, color = if (updateStatus!!.startsWith("Success")) Color.Green else Color.Red)
             }
+
 
             Button(
                 onClick = {
@@ -222,3 +225,4 @@ fun EditItemScreen(
 //        maxLines = 4
 //    )
 //}
+
