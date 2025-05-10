@@ -42,9 +42,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+
 fun LendItemFormScreen(
     navController: NavController,
     viewModel: ItemViewModel = hiltViewModel(),
@@ -59,6 +61,9 @@ fun LendItemFormScreen(
     var address by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -69,9 +74,17 @@ fun LendItemFormScreen(
     val scrollState = rememberScrollState()
 
     Scaffold(
-
         containerColor = Color.White,
-
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    modifier = Modifier.fillMaxWidth(0.8f),
+                    containerColor = Color.White, // ✅ White background
+                    contentColor = Color.Black // ✅ Black text color
+                )
+            }
+        },
         topBar = {
             CenterAlignedTopAppBar(
                 modifier = Modifier.padding(top = 3.dp),
@@ -100,7 +113,6 @@ fun LendItemFormScreen(
             )
 
             Spacer(modifier = Modifier.height(24.dp))
-
 
             // Upload image row
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -151,6 +163,7 @@ fun LendItemFormScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
+            // ✅ Button to Submit Item
             Button(
                 onClick = {
                     println("🔍 Preparing to send item...")
@@ -169,7 +182,18 @@ fun LendItemFormScreen(
                                 termsAndConditions = termsAndConditions,
                                 telephon = telephon,
                                 address = address,
-                                onSuccess = { navController.popBackStack() }
+                                onSuccess = {
+                                    navController.popBackStack()
+
+                                    // ✅ Show Snackbar on Success
+                                    coroutineScope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            message = "✅ Item added successfully!",
+                                            actionLabel = "OK",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                }
                             )
                         } else {
                             println(" Image processing failed!")

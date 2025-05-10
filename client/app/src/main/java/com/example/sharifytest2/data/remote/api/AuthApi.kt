@@ -31,7 +31,7 @@ interface AuthApi {
 
 
     @Multipart
-    @POST("api/user/profile/{id}")
+    @PUT("api/user/profile/{id}")
     suspend fun updateProfile(
         @Path("id") userId:String,
         @Part("name") name: RequestBody,

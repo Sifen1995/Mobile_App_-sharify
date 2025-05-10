@@ -1,6 +1,7 @@
 import userModel from "../../models/userModel.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
  
 export const getUserData = async(req,res)=>{
     try {

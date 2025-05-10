@@ -15,4 +15,4 @@ userRouter.put('/profile/:id',upload.single('image'), (req, res) => {
 
 });
 
-export default userRouter;``
+export default userRouter;
