@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -58,29 +60,21 @@ fun ProfileScreen(
         selectedImageUri = uri
     }
 
-    Scaffold { paddingValues ->
+    // ✅ Explicitly set Scaffold background color to white
+    Scaffold(containerColor = Color.White) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(horizontal = 16.dp, vertical = 24.dp)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()), // Add scroll for smaller screens
+                .background(Color.White) // ✅ Ensures a pure white background
+                .verticalScroll(rememberScrollState()) // Add scroll for smaller screens
+                .padding(horizontal = 16.dp, vertical = 15.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Title
-            Text(
-                text = "Profile",
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color(0xFF005D73),
-                modifier = Modifier.align(Alignment.Start)
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
             // Profile Image - Smaller rectangle
             Box(
                 modifier = Modifier
-                    .size(150.dp) // Smaller fixed size
+                    .size(150.dp) // Fixed size for profile picture
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color.LightGray)
             ) {
@@ -94,13 +88,17 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Change Picture Button
+            // ✅ Change Picture Button with Camera Icon
             Button(
                 onClick = { launcher.launch("image/*") },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF005D73))
             ) {
-                Text("Change Picture")
+                Icon(
+                    imageVector = Icons.Filled.CameraAlt, // ✅ Camera Icon
+                    contentDescription = "Change Picture",
+                    tint = Color.White // ✅ Ensures the icon is visible
+                )
             }
 
             Spacer(modifier = Modifier.height(32.dp))

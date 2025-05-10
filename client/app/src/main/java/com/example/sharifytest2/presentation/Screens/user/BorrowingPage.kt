@@ -1,5 +1,6 @@
 package com.example.sharifytest2.presentation.Screens.user
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -7,14 +8,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sharifytest2.presentation.Components.BorrowingPageComponents.BorrowedItemCard
 import com.example.sharifytest2.presentation.Components.BorrowingPageComponents.BorrowingNoteDialog
 import com.example.sharifytest2.presentation.viewmodel.ItemViewModel
-
-
-
 
 @Composable
 fun BorrowingPageScreen(viewModel: ItemViewModel = hiltViewModel()) {
@@ -43,11 +42,14 @@ fun BorrowingPageScreen(viewModel: ItemViewModel = hiltViewModel()) {
         )
     }
 
-    Scaffold { padding ->
+    // ✅ Explicitly set Scaffold background color to white
+    Scaffold(containerColor = Color.White) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(horizontal = 16.dp, vertical = 20.dp)
+                .fillMaxSize()
+                .background(Color.White) // ✅ Ensures pure white background
+                .padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -68,7 +70,7 @@ fun BorrowingPageScreen(viewModel: ItemViewModel = hiltViewModel()) {
                         title = item.name,
                         smallDescription = item.smalldescription ?: "No description",
                         imageUrl = item.image,
-                        status = "Available", // Change this dynamically if needed
+                        status = "Available",
                         note = item.note ?: "",
                         onAddNoteClick = {
                             selectedItemId = item.id
@@ -84,4 +86,3 @@ fun BorrowingPageScreen(viewModel: ItemViewModel = hiltViewModel()) {
         }
     }
 }
-
