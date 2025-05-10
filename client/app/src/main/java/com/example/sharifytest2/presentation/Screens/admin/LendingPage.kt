@@ -1,5 +1,6 @@
 package com.example.sharifytest2.presentation.Screens.admin
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,6 +54,7 @@ import androidx.navigation.NavController
 import com.example.sharifytest2.R
 import com.example.sharifytest2.presentation.viewmodel.AdminItemViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LendingScreen(
     navController: NavController,
@@ -59,44 +63,64 @@ fun LendingScreen(
 ) {
     LaunchedEffect(Unit) { viewModel.loadItems() }
     val items by viewModel.items.collectAsState()
-    var searchQuery by remember { mutableStateOf("") } // ✅ Store search query input
+    var searchQuery by remember { mutableStateOf("") }
 
     val filteredItems = items.filter { it.name.contains(searchQuery, ignoreCase = true) }
 
     Scaffold(
+        containerColor = Color.White,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onAddItemClick,
                 shape = CircleShape,
-                containerColor = Color.White,
-                contentColor = Color(0xFF005D73)
+                containerColor =  Color(0xFF005D73),
+                contentColor = Color.White
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
+                Icon(Icons.Default.Add, contentDescription = "Add" )
             }
         },
         floatingActionButtonPosition = FabPosition.End
     ) { innerPadding ->
+
+        Canvas(modifier = Modifier.fillMaxSize().padding(16.dp , 16.dp , 16.dp , 0.dp)) {
+            val start = Offset(0f, 0f)
+            val end = Offset(size.width, 2f)
+            drawLine(
+                color = Color(0xFFe0e0e0),
+                start = start,
+                end = end,
+                strokeWidth = 4f
+            )
+        }
+
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .background(Color.White)
                 .padding(start = 16.dp, end = 16.dp, top = 3.dp)
         ) {
             // Search Bar
             OutlinedTextField(
                 value = searchQuery,
-                onValueChange = { searchQuery = it }, // ✅ Update search query
+                onValueChange = { searchQuery = it },
                 placeholder = { Text("Search items...") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search Icon") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                shape = RoundedCornerShape(18.dp)
+                    .padding(bottom = 18.dp),
+                shape = RoundedCornerShape(18.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    containerColor = Color(0xFFF5F5F5),
+                    focusedBorderColor = Color.Gray ,
+                    unfocusedBorderColor = Color(0xFFFd3d3d3)
+                )
             )
 
             // Scrollable List - Filtered Items
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(filteredItems) { item -> // ✅ Show only matching items
+            LazyColumn(modifier = Modifier.fillMaxSize().background(Color.White)) {
+                items(filteredItems) { item ->
                     AdminItemCard(
                         itemId = item.id,
                         title = item.name,
@@ -104,8 +128,8 @@ fun LendingScreen(
                         imageUrl = item.image,
                         onEditClick = { selectedItemId -> navController.navigate("edit_item/$selectedItemId") },
                         onDeleteClick = {
-                            viewModel.deleteItem(item.id) // ✅ Delete item
-                            viewModel.loadItems() // ✅ Refresh items after deletion
+                            viewModel.deleteItem(item.id)
+                            viewModel.loadItems()
                         },
                     )
                 }
@@ -113,6 +137,3 @@ fun LendingScreen(
         }
     }
 }
-
-
-
