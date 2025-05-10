@@ -17,7 +17,9 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ShortText
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.PhoneIphone
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Upload
@@ -67,8 +69,11 @@ fun LendItemFormScreen(
     val scrollState = rememberScrollState()
 
     Scaffold(
+
+        containerColor = Color.White,
+
         topBar = {
-            CenterAlignedTopAppBar( // ✅ Styled UI to match LendItemScreen
+            CenterAlignedTopAppBar(
                 modifier = Modifier.padding(top = 3.dp),
                 title = { Text("Lend Item") },
                 navigationIcon = {
@@ -82,7 +87,7 @@ fun LendItemFormScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(WindowInsets.statusBars.asPaddingValues()) // ✅ Top padding for notification bar
+                .padding(WindowInsets.statusBars.asPaddingValues())
                 .padding(16.dp)
                 .verticalScroll(scrollState)
         ) {
@@ -96,13 +101,14 @@ fun LendItemFormScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+
             // Upload image row
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
                         .size(150.dp)
                         .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
-                        .clickable { imagePickerLauncher.launch("image/*") }, // ✅ Styled upload box
+                        .clickable { imagePickerLauncher.launch("image/*") },
                     contentAlignment = Alignment.Center
                 ) {
                     if (imageUri == null) {
@@ -117,7 +123,7 @@ fun LendItemFormScreen(
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 Button(
-                    onClick = { imagePickerLauncher.launch("image/*") }, // ✅ Styled button
+                    onClick = { imagePickerLauncher.launch("image/*") },
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF005D73))
                 ) {
@@ -131,7 +137,7 @@ fun LendItemFormScreen(
 
             Text("Item Info", style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
-            ItemInputField("Name*", Icons.Default.Place, name) { name = it }
+            ItemInputField("Name*", Icons.Default.Edit, name) { name = it }
             ItemInputField("Short Description*", Icons.AutoMirrored.Filled.ShortText, smalldescription) { smalldescription = it }
             ItemInputField("Description*", Icons.Default.Description, description) { description = it }
             ItemInputField("Terms & Conditions", Icons.Default.Info, termsAndConditions) { termsAndConditions = it }
@@ -140,7 +146,7 @@ fun LendItemFormScreen(
 
             Text("Contact Info", style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
-            ItemInputField("Phone Number", Icons.Default.Place, telephon) { telephon = it }
+            ItemInputField("Phone Number", Icons.Default.PhoneIphone, telephon) { telephon = it }
             ItemInputField("Address", Icons.Default.Place, address) { address = it }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -183,6 +189,7 @@ fun LendItemFormScreen(
         }
     }
 }
+
 
 @Composable
 fun ItemInputField(label: String, icon: ImageVector, value: String, onValueChange: (String) -> Unit) {
