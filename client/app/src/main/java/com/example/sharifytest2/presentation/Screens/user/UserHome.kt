@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import com.example.sharifytest2.presentation.viewmodel.ItemViewModel
 import com.example.sharifytest2.presentation.Components.HomeComponents.ItemCard
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserHomePage(navController: NavController, viewModel: ItemViewModel = hiltViewModel()) {
     var searchQuery by remember { mutableStateOf("") }
@@ -42,7 +43,11 @@ fun UserHomePage(navController: NavController, viewModel: ItemViewModel = hiltVi
             leadingIcon = {
                 Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
             },
-
+            shape = RoundedCornerShape(18.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                containerColor = Color(0xFFF5F5F5),
+                focusedBorderColor = Color.Gray ,
+                unfocusedBorderColor = Color(0xFFFd3d3d3)
             )
 
         Spacer(modifier = Modifier.height(16.dp))
