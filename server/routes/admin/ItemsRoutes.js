@@ -7,8 +7,7 @@ import userAuth from '../../middleware/userAuth.js';
  
 
 const Adminrouter = express.Router();
-
-// Adminrouter.post("/upload-Image", userAuth, isAdmin, upload.single('image'), handleUpload);
+ 
 Adminrouter.post('/add-Item', upload.single('image'),addItem);
 Adminrouter.delete('/delete-item/:id', userAuth, deleteItem);
 Adminrouter.put('/update-item/:id', upload.single('image'), updateItem);
